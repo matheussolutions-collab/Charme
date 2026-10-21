@@ -1,0 +1,44 @@
+# Configuração para hospedagem Apache (HostGator)
+
+# Página inicial
+DirectoryIndex index.html
+
+# Tipos e acentos corretos
+AddType image/webp .webp
+AddCharset UTF-8 .txt .html .css .js
+
+# Compressão: arquivos de texto chegam menores
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css application/javascript text/javascript image/svg+xml application/json
+</IfModule>
+
+# Cache no navegador do visitante
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 day"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType text/plain "access plus 1 day"
+  ExpiresByType text/css "access plus 7 days"
+  ExpiresByType application/javascript "access plus 7 days"
+  ExpiresByType text/javascript "access plus 7 days"
+  ExpiresByType image/jpeg "access plus 30 days"
+  ExpiresByType image/png "access plus 30 days"
+  ExpiresByType image/webp "access plus 30 days"
+</IfModule>
+
+# Segurança básica
+<IfModule mod_headers.c>
+  Header set X-Content-Type-Options "nosniff"
+  Header set Referrer-Policy "strict-origin-when-cross-origin"
+</IfModule>
+Options -Indexes
+
+# Bloqueia arquivos internos, caso sejam enviados por engano
+<FilesMatch "^(LEIA-ME\.md|\.DS_Store)$">
+  Require all denied
+</FilesMatch>
+
+# HTTPS obrigatório: tire o "#" das 3 linhas abaixo DEPOIS que o SSL do domínio estiver ativo no cPanel
+# RewriteEngine On
+# RewriteCond %{HTTPS} off
+# RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
